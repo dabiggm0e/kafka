@@ -21,25 +21,29 @@ public class ProducerDemoWithCallback {
         // create producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
-        // create producer record
-        ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "Hello world from Java!");
+        for(int i=0; i<10; i++)
+            {
+                // create producer record
+                ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "Hello world from Java " + i);
 
-        // send data - async
-        producer.send(record, (recordMetadata, e) -> {
-            // if record was sent successfully
-            if (e==null) {
-                log.info("New record was produced with the following metadata:" + "\n"
-                        + "Topic: " + recordMetadata.topic() + "\n"
-                        + "Partition: " + recordMetadata.partition() + "\n"
-                        + "Offset: " + recordMetadata.offset() + "\n"
-                        + "Timestamp: " + recordMetadata.timestamp() + "\n"
-                );
+                // send data - async
+
+                producer.send(record, (recordMetadata, e) -> {
+                    // if record was sent successfully
+                    if (e == null) {
+                        log.info("New record was produced with the following metadata:" + "\n"
+                                + "Topic: " + recordMetadata.topic() + "\n"
+                                + "Partition: " + recordMetadata.partition() + "\n"
+                                + "Offset: " + recordMetadata.offset() + "\n"
+                                + "Timestamp: " + recordMetadata.timestamp() + "\n"
+                        );
+                    }
+                    //if there was an exception
+                    else {
+                        log.error("There was an exception while producing.", e);
+                    }
+                });
             }
-            //if there was an exception
-            else {
-                log.error("There was an exception while producing.", e);
-            }
-        });
 
         // flush data
         producer.flush();
