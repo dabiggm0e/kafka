@@ -11,6 +11,7 @@ public class ProducerDemoWithCallback {
     public static void main(String[] args) {
         Logger log = LoggerFactory.getLogger(ProducerDemoWithCallback.class);
         String bootstrap_servers = "localhost:9092";
+        String topic = "second-topic";
 
         // create producer properties
         Properties properties = new Properties();
@@ -24,7 +25,7 @@ public class ProducerDemoWithCallback {
         for(int i=0; i<10; i++)
             {
                 // create producer record
-                ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "Hello world from Java " + i);
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, "Hello world from Java " + i);
 
                 // send data - async
 
