@@ -1,4 +1,4 @@
-package com.github.dabiggm0e.twitter;
+package com.github.dabiggm0e.kafka.demo.twitter;
 
 import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
@@ -7,25 +7,16 @@ import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
-import com.twitter.hbc.core.event.Event;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
-import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import twitter4j.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
@@ -39,8 +30,10 @@ public class TwitterHBCProducer {
 
     Logger logger =  LoggerFactory.getLogger(TwitterHBCProducer.class.getName());
     Properties prop;
-    String topic;
-    String key;
+
+    String topic = "twitter-tweets";
+    String key = "Sudan";
+    String bootstrap_servers = "localhost:9092";
 
 
     public TwitterHBCProducer(String CONSUMER_KEY, String CONSUMER_SECRET, String ACCESS_TOKEN, String ACCESS_TOKEN_SECRET) {
@@ -79,10 +72,6 @@ public class TwitterHBCProducer {
         String ACCESS_TOKEN_SECRET =  prop.getProperty("ACCESS_TOKEN_SECRET");
 
         new TwitterHBCProducer(
-//                CONSUMER_KEY,
-  //              CONSUMER_SECRET,
-    //            ACCESS_TOKEN,
-      //          ACCESS_TOKEN_SECRET
                 prop
         ).run();
     }
@@ -112,7 +101,15 @@ public class TwitterHBCProducer {
             if(msg != null) {
                 ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, msg);
                 logger.info(msg);
-                producer.send(producerRecord);
+                producer.send(producerRecord, new Callback() {
+
+                    @Override
+                    public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+                        if (e!= null) {
+                            logger.info("Something bad happened", e);
+                        }
+                    }
+                });
                 producer.flush();
             }
         }
@@ -121,10 +118,6 @@ public class TwitterHBCProducer {
     }
 
     private KafkaProducer<String, String> createKafkaProducer() {
-        topic = "twitter-tweets";
-        key = "Sudan";
-        String bootstrap_servers = "localhost:9092";
-
 
         prop.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_servers);
         prop.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -135,7 +128,6 @@ public class TwitterHBCProducer {
     }
 
     public Client createTwitterClient(BlockingQueue<String> msgQueue ) {
-        // InputStream input = new FileInputStream("../kafka/demo/twitter.properties");
 
 
 /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */

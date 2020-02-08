@@ -1,6 +1,6 @@
 package com.github.dabiggm0e.kafka.demo;
 
-import com.github.dabiggm0e.twitter.TwitterClient;
+import com.github.dabiggm0e.kafka.demo.twitter.TwitterClient;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -8,7 +8,6 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 import java.util.Collection;

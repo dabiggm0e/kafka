@@ -1,4 +1,4 @@
-package com.github.dabiggm0e.twitter;
+package com.github.dabiggm0e.kafka.demo.twitter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,6 @@ import twitter4j.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class TwitterClient {
