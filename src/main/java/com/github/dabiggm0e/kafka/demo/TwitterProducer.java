@@ -21,7 +21,7 @@ public class TwitterProducer {
         Logger log = LoggerFactory.getLogger(TwitterProducer.class);
         String bootstrap_servers = "localhost:9092";
         String topic = "twitter-timeline";
-        
+
         // create producer properties
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_servers);

@@ -49,6 +49,7 @@ public class TwitterClient {
        // twitter = TwitterFactory.getSingleton();
         List<Status> statuses = twitter.getHomeTimeline();
 
+
         logger.info("Showing twitter home timeline.");
         Collection<Status> statusCollection = new ArrayList<Status>();
 
