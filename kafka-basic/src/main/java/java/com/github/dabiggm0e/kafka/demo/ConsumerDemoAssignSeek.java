@@ -1,4 +1,4 @@
-package com.github.dabiggm0e.kafka.demo;
+package java.com.github.dabiggm0e.kafka.demo;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

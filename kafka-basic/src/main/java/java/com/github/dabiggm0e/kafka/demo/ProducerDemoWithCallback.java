@@ -1,4 +1,4 @@
-package com.github.dabiggm0e.kafka.demo;
+package java.com.github.dabiggm0e.kafka.demo;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -9,10 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class ProducerDemoWithCallbackAndKey {
+public class ProducerDemoWithCallback {
     public static void main(String[] args) {
-        Logger log = LoggerFactory.getLogger(ProducerDemoWithCallbackAndKey.class);
+        Logger log = LoggerFactory.getLogger(ProducerDemoWithCallback.class);
         String bootstrap_servers = "localhost:9092";
+        String topic = "second-topic";
 
         // create producer properties
         Properties properties = new Properties();
@@ -25,14 +26,11 @@ public class ProducerDemoWithCallbackAndKey {
 
         for(int i=0; i<10; i++)
             {
-                String topic = "first_topic";
-                String key = "id_" + i;
-                String value = "Hello world from Java " + i;
-
                 // create producer record
-                ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, "Hello world from Java " + i);
 
                 // send data - async
+
                 producer.send(record, (recordMetadata, e) -> {
                     // if record was sent successfully
                     if (e == null) {

@@ -1,4 +1,4 @@
-package com.github.dabiggm0e.kafka.demo.twitter;
+package demo.twitter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
