@@ -17,33 +17,35 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
 
-public class TwitterHBCProducer {
+public class TwitterProducer {
 
     String CONSUMER_KEY;
     String CONSUMER_SECRET;
     String ACCESS_TOKEN;
     String ACCESS_TOKEN_SECRET;
 
-    Logger logger =  LoggerFactory.getLogger(TwitterHBCProducer.class.getName());
+    Logger logger =  LoggerFactory.getLogger(TwitterProducer.class.getName());
     Properties prop;
 
     String topic = "twitter-tweets";
     String key = "Sudan";
     String bootstrap_servers = "localhost:9092";
 
+    ArrayList<String> twitterStreamingTerms = Lists.newArrayList("Sudan", "USA", "Politics");
 
-    public TwitterHBCProducer(String CONSUMER_KEY, String CONSUMER_SECRET, String ACCESS_TOKEN, String ACCESS_TOKEN_SECRET) {
+    public TwitterProducer(String CONSUMER_KEY, String CONSUMER_SECRET, String ACCESS_TOKEN, String ACCESS_TOKEN_SECRET) {
         this.CONSUMER_KEY = CONSUMER_KEY;
         this.CONSUMER_SECRET = CONSUMER_SECRET;
         this.ACCESS_TOKEN = ACCESS_TOKEN;
         this.ACCESS_TOKEN_SECRET = ACCESS_TOKEN_SECRET;
 
     }
-    public TwitterHBCProducer(Properties prop) {
+    public TwitterProducer(Properties prop) {
         this.prop = prop;
         this.CONSUMER_KEY =  prop.getProperty("CONSUMER_KEY");
         this.CONSUMER_SECRET =  prop.getProperty("CONSUMER_SECRET");
@@ -54,7 +56,7 @@ public class TwitterHBCProducer {
 
     public static void main(String[] args)  {
 
-        InputStream input = TwitterHBCProducer.class.getClassLoader().getResourceAsStream("twitter.properties");
+        InputStream input = TwitterProducer.class.getClassLoader().getResourceAsStream("twitter.properties");
         Properties prop = new Properties();
 
         if (input == null) {
@@ -71,7 +73,7 @@ public class TwitterHBCProducer {
         String ACCESS_TOKEN =  prop.getProperty("ACCESS_TOKEN");
         String ACCESS_TOKEN_SECRET =  prop.getProperty("ACCESS_TOKEN_SECRET");
 
-        new TwitterHBCProducer(
+        new TwitterProducer(
                 prop
         ).run();
     }
@@ -133,6 +135,18 @@ public class TwitterHBCProducer {
         prop.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         prop.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
+        // create a safe producer
+        prop.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+        prop.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024));
+        prop.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+        prop.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+        prop.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
+        prop.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
+        prop.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
+
+
+
+
         KafkaProducer<String, String>  producer = new KafkaProducer<String, String>(prop);
         return producer;
     }
@@ -145,7 +159,7 @@ public class TwitterHBCProducer {
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 // Optional: set up some followings and track terms
         List<Long> followings = Lists.newArrayList(1234L, 566788L);
-        List<String> terms = Lists.newArrayList("Sudan");
+        List<String> terms = Lists.newArrayList(twitterStreamingTerms);
         hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(terms);
 
