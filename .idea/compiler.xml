@@ -11,5 +11,8 @@
         <module name="kafka-basic" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="kafka-consumer-elasticsearch" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

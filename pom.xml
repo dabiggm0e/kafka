@@ -11,6 +11,7 @@
     <modules>
         <module>kafka-twitter-producer</module>
         <module>kafka-basic</module>
+        <module>kafka-consumer-elasticsearch</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
