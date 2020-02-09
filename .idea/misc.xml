@@ -9,6 +9,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/kafka-connect/pom.xml" />
         <option value="$PROJECT_DIR$/kafka-consumer-elasticsearch/pom.xml" />
         <option value="$PROJECT_DIR$/kafka-elasticsearch-consumer/pom.xml" />
       </set>

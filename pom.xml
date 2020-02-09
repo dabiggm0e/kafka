@@ -11,7 +11,7 @@
     <modules>
         <module>kafka-twitter-producer</module>
         <module>kafka-basic</module>
-        <module>kafka-consumer-elasticsearch</module>
+        <module>kafka-streams-filter-tweet</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
